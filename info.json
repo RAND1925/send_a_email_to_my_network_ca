@@ -1,8 +1,8 @@
 {
-    "name": "КЋсд",
-    "id": "1753764",
-    "lessonTime": "910",
-    "emailFrom": "rand1925@tongji.edu.cn",
-    "emialTo": "15948309581@163.com",
-    "smtp": "smtp.tongji.edu.cn"
+    "name": "name",
+    "id": "student id",
+    "lessonTime": "910 or 78",
+    "emailFrom": "your email",
+    "emialTo": "ca's email",
+    "smtp": "smtp server, i.e., smtp.tongji.edu.cn"
 }
