@@ -25,29 +25,34 @@ function RenameFiles{
     $date = $lastThursday.ToString("MM月dd日")
     Write-Host "实验日期：$date"
     $archiveName = "{0}_{1}_{2}_{3}{4}节"  -f $info.id, $info.name, ($e -Join ""), $date, $info.lessonTime
-    $archiveNameZip = $archiveName + ".zip"
-    $out = @()
+    $tempItems = @()
     For ($i = 0; $i -lt $f.Length; $i++){
         $rawFileName = $f[$i]
         $experimentName = $e[$i]
         $extention = [System.IO.Path]::GetExtension($rawFileName)
         $fileName = "{0}_{1}_{2}_{3}{4}"  -f $info.id, $info.name, $experimentName, $date, $extention
-        Write-Host $fileName
+        Write-Host $rawFileName  "->" + $fileName
         Copy-Item $rawFileName -Destination $fileName
-        $out += $fileName
+        $tempItems += $fileName
     }
     Write-Host $archiveNameZip
-   
     $compress = @{
-        LiteralPath= $out
+        LiteralPath= $tempItems
         CompressionLevel = "Fastest"
         DestinationPath = $archiveName
     }
     Compress-Archive @compress -Force
-    $pswd = Read-Host "输入密码" -AsSecureString
-    $cred = New-Object System.Management.Automation.PSCredential($info.emailFrom,$pswd)
-    Send-MailMessage -From $info.emailFrom -To $info.emialTo -Subject $archiveName -Body "自动发送" -Attachments $archiveNameZip -SmtpServer $info.smtp -Credential $cred -Encoding ([System.Text.Encoding]::UTF8)
-    Remove-Item $archiveNameZip
+    $archiveNameZip = $archiveName + ".zip"
+    Remove-Item $tempItems
+    Write-Host $archiveNameZip
+    Try {
+        $pswd = Read-Host "输入正确密码发送邮件" -AsSecureString
+        $cred = New-Object System.Management.Automation.PSCredential($info.emailFrom,$pswd)
+        $res =  Send-MailMessage -From $info.emailFrom -To $info.emialTo -Subject $archiveName -Body "自动发送" -Attachments $archiveNameZip -SmtpServer $info.smtp -Credential $cred -Encoding ([System.Text.Encoding]::UTF8)
+        Write-Host $res
+    } Finally {
+        Remove-Item $archiveNameZip
+    }
 }
 
 If ($f.Length -ne $e.Length) {
