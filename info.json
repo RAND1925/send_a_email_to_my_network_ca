@@ -1,0 +1,8 @@
+{
+    "name": "yourname",
+    "id": "student ID",
+    "lessonTime": "910 or 78",
+    "emailFrom": "i.e., xx@tongji.edu.cn",
+    "emialTo": "i.e., xxxx@tongji.edu.cn",
+    "smtp": "i.e., smtp.tongji.edu.cn"
+}
